@@ -1,7 +1,7 @@
 {
-  "name": "pedidos-api",
+  "name": "foodtrack-api",
   "version": "1.0.0",
-  "description": "pedidos-api backend",
+  "description": "foodtrack-api backend",
   "main": "server.js",
   "scripts": {
     "build": "babel src --out-dir dist --copy-files",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/racifuina/fel-api.git"
+    "url": "git+https://github.com/racifuina/foodtrack-api.git"
   },
   "author": "Rigoberto Acifuina",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/racifuina/pedidos-api/issues"
+    "url": "https://github.com/racifuina/foodtrack-api/issues"
   },
-  "homepage": "https://github.com/racifuina/pedidos-api#readme",
+  "homepage": "https://github.com/racifuina/foodtrack-api#readme",
   "dependencies": {
     "@babel/runtime": "^7.14.0",
     "bcrypt": "^5.0.1",

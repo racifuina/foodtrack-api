@@ -1,2 +1,2 @@
-# pedidos-api
-pedidos-api backend
+# foodtrack-api
+foodtrack-api backend
