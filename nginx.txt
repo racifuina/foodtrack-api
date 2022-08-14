@@ -1,0 +1,104 @@
+sudo nano /etc/nginx/conf.d/pedidos.acifuina.com.conf
+
+server {
+    listen 80;
+    server_name pedidos.acifuina.com;
+    location / {
+        proxy_pass http://localhost:8082;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+sudo certbot certonly --nginx --agree-tos -d pedidos.acifuina.com --preferred-chain "ISRG Root X1" --force-renewal
+
+sudo rm /etc/nginx/conf.d/pedidos.acifuina.com.conf
+sudo nano /etc/nginx/conf.d/pedidos.acifuina.com.conf
+
+server {
+    listen 80;
+    server_name pedidos.acifuina.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name pedidos.acifuina.com;
+    ssl_certificate     /etc/letsencrypt/live/pedidos.acifuina.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/pedidos.acifuina.com/privkey.pem;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+
+    location / {
+        proxy_pass http://localhost:8082;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+sudo service nginx reload
+
+
+pm2 start --time --name pedidos-api npm -- start
+
+
+nano pedidos-api.sh
+
+#!/bin/bash
+# -*- ENCODING: UTF-8 -*-
+echo "<° *******************************************************************************"
+echo "<° *******************+* Instancia PM2 pedidos-api: DETENIDA *************************"
+echo "<° *******************************************************************************"
+pm2 stop pedidos-api
+echo "<° *******************************************************************************"
+echo "<° *********************+** Descargando Paquetes GIT *****************************"
+echo "<° *******************************************************************************"
+cd pedidos-api && git pull
+echo "<° *******************************************************************************"
+echo "<° ************************* Instalando Dependencias *****************************"
+echo "<° *******************************************************************************"
+npm install
+echo "<° *******************************************************************************"
+echo "<° ******************************* Compilando ************************************"
+echo "<° *******************************************************************************"
+npm run build
+echo "<° *******************************************************************************"
+echo "<° ******************** Instancia PM2 pedidos-api: INICIANDO *************************"
+echo "<° *******************************************************************************"
+pm2 restart pedidos-api
+echo "<° *******************************************************************************"
+echo "<° *************************** Guardando Cambios PM2 *****************************"
+echo "<° *******************************************************************************"
+pm2 save
+echo "<° *******************************************************************************"
+echo "<° ******************************* Cargando LOGS *********************************"
+echo "<° *******************************************************************************"
+pm2 logs pedidos-api
+exit
+
+
+
+PORT=
+JWT_SECRET_TOKEN=pedidos-api
+WEB_UI_URL=https://foodtrack-umg.web.app
+
+DB_DATABASE=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+DB_DIALECT=
+DISABLE_DB_LOGS=true
+URL_INFO_NIT=
+TOKEN_INFO_NIT=
+
+EMAIL_USER=
+EMAIL_PASS=
+

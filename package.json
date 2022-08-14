@@ -1,0 +1,47 @@
+{
+  "name": "pedidos-api",
+  "version": "1.0.0",
+  "description": "pedidos-api backend",
+  "main": "server.js",
+  "scripts": {
+    "build": "babel src --out-dir dist --copy-files",
+    "start": "node dist/server.js",
+    "dev": "nodemon  src/server.js --exec babel-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/racifuina/fel-api.git"
+  },
+  "author": "Rigoberto Acifuina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/racifuina/pedidos-api/issues"
+  },
+  "homepage": "https://github.com/racifuina/pedidos-api#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.14.0",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^9.0.2",
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.6.1",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.2",
+    "uid": "^2.0.0",
+    "uniqid": "^5.3.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "nodemon": "^2.0.6"
+  }
+}
