@@ -4,16 +4,6 @@ import moment from 'moment';
 import ErrorHandler from './middlewares/ErrorHandler';
 import options from '../package.json';
 import UsuariosRoutes from './routes/UsuariosRoutes';
-import EmpleadosRoutes from './routes/EmpleadosRoutes';
-import ProductosRoutes from './routes/ProductosRoutes';
-import ClientesRoutes from './routes/ClientesRoutes';
-import RolesRoutes from './routes/RolesRoutes';
-import PedidosController from './routes/PedidosRoutes';
-import PuestosRoutes from './routes/PuestosRoutes';
-import PermisosRoutes from './routes/PermisosRoutes';
-import TiposAutorizacionesRoutes from './routes/TiposAutorizacionesRoutes';
-import RolesPermisosRoutes from './routes/RolesPermisosRoutes';
-import FacturasRoutes from './routes/FacturasRoutes';
 
 const startupDate = moment().format("DD-MM-YYYY HH:mm")
 const app = express();
@@ -44,16 +34,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/usuarios', UsuariosRoutes);
-app.use('/empleados', EmpleadosRoutes);
-app.use('/productos', ProductosRoutes);
-app.use('/roles', RolesRoutes);
-app.use('/clientes', ClientesRoutes);
-app.use('/puestos', PuestosRoutes);
-app.use('/permisos', PermisosRoutes);
-app.use('/pedidos', PedidosController);
-app.use('/facturas', FacturasRoutes);
-app.use('/tipos-autorizaciones', TiposAutorizacionesRoutes);
-app.use('/roles-permisos', RolesPermisosRoutes);
 
 //ROUTES
 app.use('*', (req, res) => {
