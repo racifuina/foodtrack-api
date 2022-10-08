@@ -9,6 +9,88 @@ const WEB_UI_URL = process.env.WEB_UI_URL || "https://foodtrack-ui.web.app";
 
 const llavePrimaria = Usuario.primaryKeyAttributes[0] || '';
 
+export const getAll = (req, res) => {
+
+	const where = {
+		estadoId: req.query.estadoId || 1
+	};
+
+	return Usuario.findAll({
+		where,
+		include: ['rol', 'empleado']
+	}).then(items => res.json(items)).catch(err => ErrorHandler(err, res))
+};
+
+export const create = (req, res) => {
+	const token = uniqid();
+	req.body.token = token;
+	return Usuario.create(req.body).then(usuario => usuario.reload({ include: ['empleado'] }))
+		.then(usuario => {
+			let html = fs.readFileSync(path.join(__dirname, '..', 'resources/new-user.html'), 'utf8');
+			html = html.replace("{host}", WEB_UI_URL);
+			html = html.replace("{host}", WEB_UI_URL);
+			html = html.replace("{name}", usuario.empleado.nombre);
+			html = html.replace("{token}", usuario.token);
+			html = html.replace("{token}", usuario.token);
+			html = html.replace("{email}", usuario.email);
+			html = html.replace("{email}", usuario.email);
+			html = html.replace("{email}", usuario.email);
+			html = html.replace("{imagen}", "logo-foodtrack");
+
+			return sendHtmlEmail(usuario.email, `Bienvenido al sistema FoodTrack ${usuario.empleado.nombre}`, html).then(() => item).then(() => usuario);
+		}).then(item => {
+			return res.json(item);
+		}).catch(err => ErrorHandler(err, res));
+}
+
+export const getById = (req, res) => {
+	return Usuario.findOne({
+		where: {
+			[llavePrimaria]: req.params.id
+		}
+	}).then(item => {
+		if (!item) {
+			res.status(404);
+			throw Error('No encontrado');
+		}
+		return res.json(item);
+	}).catch(err => ErrorHandler(err, res));
+}
+
+export const updateById = (req, res) => {
+	return Usuario.findOne({
+		where: {
+			[llavePrimaria]: req.params.id
+		}
+	}).then(item => {
+		if (!item) {
+			res.status(404);
+			throw Error('No encontrado');
+		}
+		Object.keys(req.body).forEach(field => {
+			if (field != llavePrimaria && field != 'estadoId') {
+				item[field] = req.body[field];
+			}
+		})
+		return item.save();
+	}).then(item => res.json(item)).catch(err => ErrorHandler(err, res));
+}
+
+export const deleteById = (req, res) => {
+	return Usuario.findOne({
+		where: {
+			[llavePrimaria]: req.params.id
+		}
+	}).then(item => {
+		if (!item) {
+			res.status(404);
+			throw Error('No encontrado');
+		}
+		item.estadoId = 2;
+		return item.save();
+	}).then(() => res.json({ exito: true })).catch(err => ErrorHandler(err, res));
+}
+
 export const autenticar = (req, res) => {
 	const { email } = req.body;
 	return Usuario.findOne({
@@ -95,18 +177,7 @@ export const solicitarRecuperarPassword = (req, res) => {
 		html = html.replace("{email}", usuario.email);
 		html = html.replace("{imagen}", "logo-foodtrack");
 
-		const mailOptions = {
-			from: `"Soporte FoodTrack" <${process.env.EMAIL_USER}>`,
-			to: [usuario.email],
-			subject: `Recuperación de contraseña sistema FoodTrack ${usuario.empleado.nombre}`,
-			html: html,
-			attachments: [{
-				filename: 'foodtrack.png',
-				path: path.join(__dirname, '..', 'resources/foodtrack-blue-bg.png'),
-				cid: 'logo-foodtrack'
-			}]
-		};
-		return emailService.sendMail(mailOptions);
+		return sendHtmlEmail(usuario.email, `Recuperación de contraseña sistema FoodTrack ${usuario.empleado.nombre}`, html).then(() => item);
 	}).then(() => {
 		return res.json({ mensaje: "Te hemos enviado un correo electrónico con instrucciones para restablecer tu contraseña" });
 	}).catch(err => ErrorHandler(err, res));

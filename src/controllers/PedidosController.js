@@ -8,7 +8,7 @@ import Factura from '../models/Factura';
 import { v4 as uuidv4 } from 'uuid';
 import { uid } from 'uid';
 import { facturaPedido } from '../helpers/emailTemplates';
-import emailService, { emailTemplates } from '../lib/emailService';
+import emailService, { emailTemplates, sendHtmlEmail } from '../lib/emailService';
 import { Op } from 'sequelize';
 import { sendEmail } from '../lib/emailService';
 
@@ -263,17 +263,7 @@ export const changeStatusById = (req, res) => {
                 return pedido.save();
             }).then(item => {
                 if (item.email) {
-                    return emailService.sendMail({
-                        from: `"FoodTrack" <${process.env.EMAIL_USER}>`,
-                        to: [item.email],
-                        subject: `Factura de pedido ${item.pedidoId}`,
-                        html: facturaPedido(item),
-                        attachments: [{
-                            filename: 'foodtrack.png',
-                            path: path.join(__dirname, '..', 'resources/foodtrack-blue-bg.png'),
-                            cid: 'logo-foodtrack'
-                        }]
-                    }).then(() => item);
+                   return sendHtmlEmail(item.email, `Factura de pedido ${item.pedidoId}`, facturaPedido(item)).then(() => item);
                 }
                 return item;
             })
