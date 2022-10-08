@@ -6,8 +6,7 @@ import Pedido from '../models/Pedido';
 import Factura from '../models/Factura';
 import { v4 as uuidv4 } from 'uuid';
 import { uid } from 'uid';
-import { facturaPedido } from '../helpers/emailTemplates';
-import {sendEmail, emailTemplates, sendHtmlEmail } from '../lib/emailService';
+import {sendEmail, emailTemplates } from '../lib/emailService';
 import { Op } from 'sequelize';
 
 const llavePrimaria = Pedido.primaryKeyAttributes[0] || '';
