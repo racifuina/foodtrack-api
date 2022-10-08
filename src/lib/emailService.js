@@ -7,6 +7,8 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 export const emailTemplates = {
     nuevoPedido: 'd-a8f537396e9b466a87c56446d2115eb2',
+    crearPassword: 'd-0f16731282f84f4a9183d5efae5565e9',
+    cambiarPassword: 'd-8ec568bd96e44f838af2833abb9b8926'
 };
 
 const smtpTransport = nodemailer.createTransport(

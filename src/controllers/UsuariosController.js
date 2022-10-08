@@ -4,7 +4,7 @@ import path from 'path';
 import Usuario from '../models/Usuario';
 import { crearToken } from '../lib';
 import ErrorHandler from '../middlewares/ErrorHandler';
-import { sendHtmlEmail } from '../lib/emailService';
+import { emailTemplates, sendEmail, sendHtmlEmail } from '../lib/emailService';
 const WEB_UI_URL = process.env.WEB_UI_URL || "https://foodtrack-umg.web.app";
 
 const llavePrimaria = Usuario.primaryKeyAttributes[0] || '';
@@ -25,20 +25,10 @@ export const create = (req, res) => {
 	const token = uniqid();
 	req.body.token = token;
 	return Usuario.create(req.body).then(usuario => usuario.reload({ include: ['empleado'] }))
-		.then(usuario => {
-			let html = fs.readFileSync(path.join(__dirname, '..', 'resources/new-user.html'), 'utf8');
-			html = html.replace("{host}", WEB_UI_URL);
-			html = html.replace("{host}", WEB_UI_URL);
-			html = html.replace("{name}", usuario.empleado.nombre);
-			html = html.replace("{token}", usuario.token);
-			html = html.replace("{token}", usuario.token);
-			html = html.replace("{email}", usuario.email);
-			html = html.replace("{email}", usuario.email);
-			html = html.replace("{email}", usuario.email);
-			html = html.replace("{imagen}", "logo-foodtrack");
-
-			return sendHtmlEmail(usuario.email, `Bienvenido al sistema FoodTrack ${usuario.empleado.nombre}`, html).then(() => item).then(() => usuario);
-		}).then(item => {
+		.then(usuario => sendEmail(usuario.email, emailTemplates.crearPassword, {
+			link: `${WEB_UI_URL}/cambiar-password/${usuario.token}`,
+			nombreUsuario: usuario.empleado.nombre
+		}).then(() => item).then(() => usuario)).then(item => {
 			return res.json(item);
 		}).catch(err => ErrorHandler(err, res));
 }
@@ -165,20 +155,10 @@ export const solicitarRecuperarPassword = (req, res) => {
 		}
 		usuario.token = token;
 		return usuario.save();
-	}).then(usuario => {
-		let html = fs.readFileSync(path.join(__dirname, '..', 'resources/reset-password.html'), 'utf8');
-		html = html.replace("{host}", WEB_UI_URL);
-		html = html.replace("{host}", WEB_UI_URL);
-		html = html.replace("{name}", usuario.empleado.nombre);
-		html = html.replace("{token}", usuario.token);
-		html = html.replace("{token}", usuario.token);
-		html = html.replace("{email}", usuario.email);
-		html = html.replace("{email}", usuario.email);
-		html = html.replace("{email}", usuario.email);
-		html = html.replace("{imagen}", "logo-foodtrack");
-
-		return sendHtmlEmail(usuario.email, `Recuperación de contraseña sistema FoodTrack ${usuario.empleado.nombre}`, html).then(() => item);
-	}).then(() => {
+	}).then(usuario =>  sendEmail(usuario.email, emailTemplates.cambiarPassword, {
+		link: `${WEB_UI_URL}/cambiar-password/${usuario.token}`,
+		nombreUsuario: usuario.empleado.nombre
+	}).then(() => item)).then(() => {
 		return res.json({ mensaje: "Te hemos enviado un correo electrónico con instrucciones para restablecer tu contraseña" });
 	}).catch(err => ErrorHandler(err, res));
 }
