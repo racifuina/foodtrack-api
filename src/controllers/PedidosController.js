@@ -1,4 +1,3 @@
-import path from 'path';
 import axios from 'axios';
 import ErrorHandler from '../middlewares/ErrorHandler';
 import DetallePedido from '../models/DetallePedido';
@@ -8,9 +7,8 @@ import Factura from '../models/Factura';
 import { v4 as uuidv4 } from 'uuid';
 import { uid } from 'uid';
 import { facturaPedido } from '../helpers/emailTemplates';
-import emailService, { emailTemplates, sendHtmlEmail } from '../lib/emailService';
+import {sendEmail, emailTemplates, sendHtmlEmail } from '../lib/emailService';
 import { Op } from 'sequelize';
-import { sendEmail } from '../lib/emailService';
 
 const llavePrimaria = Pedido.primaryKeyAttributes[0] || '';
 

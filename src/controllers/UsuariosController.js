@@ -4,8 +4,8 @@ import path from 'path';
 import Usuario from '../models/Usuario';
 import { crearToken } from '../lib';
 import ErrorHandler from '../middlewares/ErrorHandler';
-import emailService from '../lib/emailService';
-const WEB_UI_URL = process.env.WEB_UI_URL || "https://foodtrack-ui.web.app";
+import { sendHtmlEmail } from '../lib/emailService';
+const WEB_UI_URL = process.env.WEB_UI_URL || "https://foodtrack-umg.web.app";
 
 const llavePrimaria = Usuario.primaryKeyAttributes[0] || '';
 
