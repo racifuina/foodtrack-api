@@ -1,4 +1,5 @@
 import path from 'path';
+import axios from 'axios';
 import ErrorHandler from '../middlewares/ErrorHandler';
 import DetallePedido from '../models/DetallePedido';
 import EstadoPedido from '../models/EstadoPedido';
@@ -218,21 +219,45 @@ export const changeStatusById = (req, res) => {
         return pedido;
     }).then(pedido => {
         if (pedido.estadoId === 7) {
-            return Factura.create({
-                pedidoId: pedido.pedidoId,
-                nombreReceptor: pedido.cliente.nombre,
-                nit: pedido.nit,
-                serie: uid(8).toUpperCase(),
-                uid: uuidv4(),
-                detalles: pedido.detalles.map(detalle => ({
-                    cantidad: detalle.cantidad,
-                    descripcion: detalle.producto.nombre,
-                    precioUnitario: detalle.precioUnitario,
-                    descuento: 0,
-                    subtotal: detalle.subtotal
-                }))
+            return axios.post(`${process.env.URL_INFO_NIT}`, {
+                IDTipoRequest: 0,
+                NIT: pedido.nit,
+                RequestorName: "Sistema AURORA",
+                CentroCostoID: "",
+                CodigoEstablecimiento: 0,
+                EmpresaID: 0
             }, {
-                include: ['detalles']
+                headers: {
+                    'Authorization': `${process.env.TOKEN_INFO_NIT}`
+                }
+            }).then(response => response.data).then(info => {
+                if (info.Receptor.NombreReceptor.length > 0) {
+                    return {
+                        nombreReceptor: info.Receptor.NombreReceptor,
+                        nit: info.Receptor.NITReceptor
+                    }
+                }
+                return {
+                    nombreReceptor: 'CONSUMIDOR FINAL',
+                    nit: 'CF'
+                }
+            }).then(({ nombreReceptor, nit }) => {
+                return Factura.create({
+                    pedidoId: pedido.pedidoId,
+                    nombreReceptor,
+                    nit,
+                    serie: uid(8).toUpperCase(),
+                    uid: uuidv4(),
+                    detalles: pedido.detalles.map(detalle => ({
+                        cantidad: detalle.cantidad,
+                        descripcion: detalle.producto.nombre,
+                        precioUnitario: detalle.precioUnitario,
+                        descuento: 0,
+                        subtotal: detalle.subtotal
+                    }))
+                }, {
+                    include: ['detalles']
+                })
             }).then(factura => {
                 pedido.facturaId = factura.facturaId;
                 return pedido.save();
