@@ -261,7 +261,10 @@ export const changeStatusById = (req, res) => {
                 return pedido.save();
             }).then(item => {
                 if (item.email) {
-                   return sendHtmlEmail(item.email, `Factura de pedido ${item.pedidoId}`, facturaPedido(item)).then(() => item);
+                    return sendEmail(item.email, emailTemplates.facturaPedido, {
+                        link: `${process.env.WEB_UI_URL}/impresion-factura/${item.facturaId}`,
+                        pedidoId: item.pedidoId
+                    }).then(() => item);
                 }
                 return item;
             })
