@@ -1,6 +1,5 @@
 import ErrorHandler from '../middlewares/ErrorHandler';
-import axios from 'axios';
-import Modelo from '../models/Cliente';
+import Modelo from '../models/Producto';
 const llavePrimaria = Modelo.primaryKeyAttributes[0] || '';
 
 export const getAll = (req, res) => {
@@ -64,18 +63,3 @@ export const deleteById = (req, res) => {
         return item.save();
     }).then(() => res.json({ exito: true })).catch(err => ErrorHandler(err, res));
 }
-
-export const validarNit = (req, res) => {
-    return axios.post(`${process.env.URL_INFO_NIT}`, {
-        IDTipoRequest: 0,
-        NIT: req.params.nitCliente,
-        RequestorName: "Sistema AURORA",
-        CentroCostoID: "",
-        CodigoEstablecimiento: 0,
-        EmpresaID: 0
-    }, {
-        headers: {
-            'Authorization': `${process.env.TOKEN_INFO_NIT}`
-        }
-    }).then(response => response.data).then(info => res.json(info)).catch(err => ErrorHandler(err, res))
-};
