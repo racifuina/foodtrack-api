@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import Empleado from '../../src/models/Empleado';
 import Permiso from '../../src/models/Permiso';
+import Producto from '../../src/models/Producto';
 import Puesto from '../../src/models/Puesto';
 import Rol from '../../src/models/Rol';
 import RolPermiso from '../../src/models/RolPermiso';
@@ -57,5 +58,16 @@ export const MakePermiso = async (params = {}) => {
     return await new Permiso({
         nombre: params.nombre ?? faker.random.word(),
         descripcion: params.descripcion ?? faker.lorem.sentence(),
+    }).save();
+};
+
+export const MakeProducto = async (params = {}) => {
+    faker.seed();
+    return await new Producto({
+        nombre: params.nombre ?? faker.commerce.product(),
+        descripcion: params.descripcion ?? faker.random.words(),
+        imagen: params.imagen ?? faker.internet.url(),
+        precio: params.precio ?? faker.commerce.price(),
+        estadoId: params.estadoId ?? 1,
     }).save();
 };

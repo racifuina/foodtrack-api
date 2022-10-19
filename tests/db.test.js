@@ -1,7 +1,7 @@
 import { QueryTypes } from 'sequelize';
 import { dbConnection } from '../src/dbconn';
 
-describe('api', () => {
+describe('database', () => {
     it('should connect to db', async () => {
         const result = await dbConnection.query('SELECT 1+1 AS result', {
             type: QueryTypes.SELECT,
