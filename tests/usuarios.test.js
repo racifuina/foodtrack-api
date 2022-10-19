@@ -1,9 +1,8 @@
 import request from 'supertest';
 import { faker } from '@faker-js/faker';
 import app from '../src/app';
-import { MakeEmpleado, MakeRol, MakeUser } from './factories';
-import { AuthenticateUser } from './helpers';
-import { sendEmail } from '../src/lib/emailService';
+import { MakeEmpleado, MakeRol, MakeUser } from './utils/factories';
+import { AuthenticateUser } from './utils/helpers';
 import sgMail from '@sendgrid/mail';
 
 describe('usuarios', () => {

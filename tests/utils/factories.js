@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
-import Empleado from '../src/models/Empleado';
-import Permiso from '../src/models/Permiso';
-import Puesto from '../src/models/Puesto';
-import Rol from '../src/models/Rol';
-import RolPermiso from '../src/models/RolPermiso';
-import Usuario from '../src/models/Usuario';
+import Empleado from '../../src/models/Empleado';
+import Permiso from '../../src/models/Permiso';
+import Puesto from '../../src/models/Puesto';
+import Rol from '../../src/models/Rol';
+import RolPermiso from '../../src/models/RolPermiso';
+import Usuario from '../../src/models/Usuario';
 
 export const MakeUser = async (params = {}) => {
     faker.seed();

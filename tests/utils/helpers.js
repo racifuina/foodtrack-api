@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../src/app';
+import app from '../../src/app';
 
 export const AuthenticateUser = async (email, password) => {
     const { body } = await request(app)

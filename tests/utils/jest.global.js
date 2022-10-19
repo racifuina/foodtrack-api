@@ -1,8 +1,8 @@
-import '../src/models';
-import { dbConnection } from '../src/dbconn';
-import Estado from '../src/models/Estado';
-import TipoAutorizacion from '../src/models/TipoAutorizacion';
-import Permiso from '../src/models/Permiso';
+import '../../src/models';
+import { dbConnection } from '../../src/dbconn';
+import Estado from '../../src/models/Estado';
+import TipoAutorizacion from '../../src/models/TipoAutorizacion';
+import Permiso from '../../src/models/Permiso';
 
 module.exports = async () => {
     console.log(`

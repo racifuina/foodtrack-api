@@ -2,5 +2,5 @@ module.exports = {
     testEnvironment: 'node',
     verbose: true,
     testTimeout: 20000,
-    globalSetup: '<rootDir>/tests/jest.global.js',
+    globalSetup: '<rootDir>/tests/utils/jest.global.js',
 };
