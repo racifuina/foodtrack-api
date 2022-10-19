@@ -1,0 +1,15 @@
+import './Cliente';
+import './DetalleFactura';
+import './DetallePedido';
+import './Empleado';
+import './Estado';
+import './EstadoPedido';
+import './Factura';
+import './Pedido';
+import './Permiso';
+import './Producto';
+import './Puesto';
+import './Rol';
+import './RolPermiso';
+import './TipoAutorizacion';
+import './Usuario';

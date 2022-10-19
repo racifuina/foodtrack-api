@@ -7,7 +7,8 @@
     "build": "babel src --out-dir dist --copy-files",
     "start": "node dist/server.js",
     "dev": "nodemon  src/server.js --exec babel-node",
-    "test": "jest"
+    "test": "docker-compose up -d db && NODE_ENV=test jest -i --config=jest.config.js --detectOpenHandles",
+    "test-ci": "NODE_ENV=test NODE_OPTIONS='--max-old-space-size=4096' jest -i --ci --config=jest.config.ts"
   },
   "repository": {
     "type": "git",
