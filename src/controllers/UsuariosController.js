@@ -28,7 +28,7 @@ export const create = (req, res) => {
 		.then(usuario => sendEmail(usuario.email, emailTemplates.crearPassword, {
 			link: `${WEB_UI_URL}/cambiar-password/${usuario.token}`,
 			nombreUsuario: usuario.empleado.nombre
-		}).then(() => item).then(() => usuario)).then(item => {
+		}).then(() => usuario).then(() => usuario)).then(item => {
 			return res.json(item);
 		}).catch(err => ErrorHandler(err, res));
 }

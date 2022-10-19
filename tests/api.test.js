@@ -1,13 +1,18 @@
-import { QueryTypes } from 'sequelize';
-import { dbConnection } from '../src/dbconn';
+import request from 'supertest';
+import app from '../src/app';
 
-describe('startup test', () => {
-    it('should connect to db', async () => {
-        const result = await dbConnection.query('SELECT 1+1 AS result', {
-            type: QueryTypes.SELECT,
-        });
-        expect(result).not.toBeUndefined();
-        expect(result.length).toEqual(1);
-        expect(result[0].result).toEqual(2);
+describe('api', () => {
+    it('should get api status', async () => {
+        const response = await request(app).get('/').expect('Content-Type', /json/).expect(200);
+        expect(response.body.app).toEqual('foodtrack-api');
+    });
+
+    it('should fail if not authenticated', async () => {
+        await request(app).get('/usuarios').expect('Content-Type', /json/).expect(403);
+    });
+
+    it('should fail if endpoint does not exit', async () => {
+        const response = await request(app).get('/users').expect('Content-Type', /json/).expect(404);
+        expect(response.body.error).toEqual('No encontrado');
     });
 });
