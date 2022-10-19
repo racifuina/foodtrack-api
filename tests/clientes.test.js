@@ -1,25 +1,26 @@
 import request from 'supertest';
 import { faker } from '@faker-js/faker';
 import app from '../src/app';
-import { MakeProducto, MakeUser } from './utils/factories';
+import { MakeCliente, MakeProducto, MakeUser } from './utils/factories';
 import { AuthenticateUser } from './utils/helpers';
 
-describe('productos', () => {
+describe('clientes', () => {
     beforeEach(async () => {
         jest.clearAllMocks();
     });
 
-    it('should create product', async () => {
+    it('should create client', async () => {
         const user = await MakeUser();
         const token = await AuthenticateUser(user.email);
         const { body } = await request(app)
-            .post('/productos')
+            .post('/clientes')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                nombre: faker.commerce.product(),
-                descripcion: faker.random.words(),
-                imagen: faker.internet.url(),
-                precio: faker.commerce.price(),
+                nombre: faker.name.fullName(),
+                email: faker.internet.email(),
+                nit: faker.datatype.number().toString(),
+                direccion: faker.address.streetAddress(),
+                numeroTelefono: faker.phone.number(),
                 estadoId: 1,
             })
             .expect('Content-Type', /json/)
@@ -30,35 +31,36 @@ describe('productos', () => {
         expect(body.estadoId).toEqual(1);
     });
 
-    it('should read product', async () => {
+    it('should read client', async () => {
         const user = await MakeUser();
-        const producto = await MakeProducto();
+        const cliente = await MakeCliente();
         const token = await AuthenticateUser(user.email);
 
         const { body } = await request(app)
-            .get(`/productos/${producto.productoId}`)
+            .get(`/clientes/${cliente.clienteId}`)
             .set('Authorization', `Bearer ${token}`)
             .expect('Content-Type', /json/)
             .expect(200);
+
         expect(body).not.toBeUndefined();
-        expect(body.productoId).toEqual(producto.productoId);
+        expect(body.clienteId).toEqual(cliente.clienteId);
     });
 
-    it('should update product', async () => {
+    it('should update client', async () => {
         const user = await MakeUser();
-        const producto = await MakeProducto({ precio: 0 });
+        const cliente = await MakeCliente({ direccion: '' });
         const token = await AuthenticateUser(user.email);
 
         const { body } = await request(app)
-            .post(`/productos/${producto.productoId}`)
+            .post(`/clientes/${cliente.clienteId}`)
             .set('Authorization', `Bearer ${token}`)
             .send({
-                precio: faker.commerce.price(),
+                direccion: faker.address.streetAddress(),
             })
             .expect('Content-Type', /json/)
             .expect(200);
         expect(body).not.toBeUndefined();
-        expect(body.productoId).toEqual(producto.productoId);
+        expect(body.clienteId).toEqual(cliente.clienteId);
         expect(body.precio).not.toEqual(0);
     });
 });

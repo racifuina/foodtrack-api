@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import Cliente from '../../src/models/Cliente';
 import Empleado from '../../src/models/Empleado';
 import Permiso from '../../src/models/Permiso';
 import Producto from '../../src/models/Producto';
@@ -68,6 +69,18 @@ export const MakeProducto = async (params = {}) => {
         descripcion: params.descripcion ?? faker.random.words(),
         imagen: params.imagen ?? faker.internet.url(),
         precio: params.precio ?? faker.commerce.price(),
+        estadoId: params.estadoId ?? 1,
+    }).save();
+};
+
+export const MakeCliente = async (params = {}) => {
+    faker.seed();
+    return await new Cliente({
+        nombre: params.nombre ?? faker.name.fullName(),
+        email: params.email ?? faker.internet.email(),
+        nit: params.nit ?? faker.datatype.number().toString(),
+        direccion: params.direccion ?? faker.address.streetAddress(),
+        numeroTelefono: params.numeroTelefono ?? faker.phone.number(),
         estadoId: params.estadoId ?? 1,
     }).save();
 };
