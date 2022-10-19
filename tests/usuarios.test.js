@@ -6,6 +6,10 @@ import { AuthenticateUser } from './utils/helpers';
 import sgMail from '@sendgrid/mail';
 
 describe('usuarios', () => {
+    beforeEach(async () => {
+        jest.clearAllMocks();
+    });
+
     it('should authenticate user', async () => {
         const user = await MakeUser();
 
