@@ -27,6 +27,30 @@ describe('usuarios', () => {
         expect(body.token).not.toBeUndefined();
     });
 
+    it('should fail if wrong password', async () => {
+        const user = await MakeUser();
+
+        await request(app)
+            .post('/usuarios/autenticar')
+            .send({
+                email: user.email,
+                password: 'abc',
+            })
+            .expect('Content-Type', /json/)
+            .expect(400);
+    });
+
+    it('should fail if user does not exist', async () => {
+        await request(app)
+            .post('/usuarios/autenticar')
+            .send({
+                email: faker.internet.email(),
+                password: 'password',
+            })
+            .expect('Content-Type', /json/)
+            .expect(404);
+    });
+
     it('should create user', async () => {
         const user = await MakeUser();
         const token = await AuthenticateUser(user.email);
